@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .filter-group {
+            display: inline-block;
+            margin-right: 2rem;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .project-card.has-notes {
+            border-left: 4px solid #3498db;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .project-card.selected {
+            border: 2px solid #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .github-link {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #24292e;
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .github-link:hover {
+            background: #1a1e22;
+        }
+        
+        .github-link.private {
+            background: #6f42c1;
+        }
+        
+        .github-link.private:hover {
+            background: #5a32a3;
+        }
+        
+        .github-link.azure {
+            background: #0078d4;
+        }
+        
+        .github-link.azure:hover {
+            background: #106ebe;
+        }
+        
+        .visibility-icon {
+            width: 12px;
+            height: 12px;
+            margin-right: 0.25rem;
+        }
+        
+        .project-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .project-type {
+            font-size: 0.875rem;
+            color: #666;
+            background: #f0f0f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 80px; /* Space for GitHub button */
+        }
+        
+        .project-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .project-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .status-indicator.yes {
+            background-color: #27ae60;
+        }
+        
+        .status-indicator.no {
+            background-color: #e74c3c;
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #ecf0f1;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #bdc3c7;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #229954;
+        }
+        
+        .annotation-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .annotation-panel.open {
+            right: 0;
+        }
+        
+        .annotation-header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .annotation-content {
+            padding: 1.5rem;
+        }
+        
+        .annotation-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .annotation-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .annotation-group textarea,
+        .annotation-group input,
+        .annotation-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .annotation-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tag {
+            background: #3498db;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .stats {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.875rem;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .file-browser {
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .file-tree {
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        
+        .file-tree-item {
+            padding: 0.25rem 0;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .file-tree-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .file-tree-item.directory {
+            font-weight: bold;
+        }
+        
+        .file-tree-item.file {
+            padding-left: 1rem;
+        }
+        
+        .file-icon {
+            display: inline-block;
+            width: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .file-viewer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            height: 80%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 2000;
+            flex-direction: column;
+        }
+        
+        .file-viewer.open {
+            display: flex;
+        }
+        
+        .file-viewer-header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .file-viewer-content {
+            flex: 1;
+            overflow: auto;
+            padding: 1rem;
+            background-color: #f8f8f8;
+        }
+        
+        .file-content {
+            white-space: pre;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: #333;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1500;
+        }
+        
+        .overlay.open {
+            display: block;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: #666;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .success {
+            background: #efe;
+            color: #363;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Project Viewer</h1>
+    </div>
+    
+    <div class="container">
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="total-projects">0</div>
+                <div class="stat-label">Total Projects</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="git-repos">0</div>
+                <div class="stat-label">Git Repositories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="github-repos">0</div>
+                <div class="stat-label">GitHub Repos</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="annotated">0</div>
+                <div class="stat-label">Annotated</div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label>Language:</label>
+                <select id="language-filter">
+                    <option value="">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Type:</label>
+                <select id="type-filter">
+                    <option value="">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="status-filter">
+                    <option value="">All</option>
+                    <option value="no-git">No Git</option>
+                    <option value="no-remote">No Remote</option>
+                    <option value="no-readme">No README</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Search:</label>
+                <input type="text" id="search" placeholder="Search projects...">
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">Loading projects...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="success" class="success" style="display: none;"></div>
+        
+        <div class="project-grid" id="project-grid"></div>
+    </div>
+    
+    <div class="annotation-panel" id="annotation-panel">
+        <div class="annotation-header">
+            <h2 id="annotation-title">Project Details</h2>
+            <button class="close-btn" onclick="closeAnnotation()">&times;</button>
+        </div>
+        <div class="annotation-content">
+            <div class="annotation-group">
+                <label>Notes:</label>
+                <textarea id="annotation-notes" placeholder="Add notes about this project..."></textarea>
+            </div>
+            
+            <div class="annotation-group">
+                <label>Tags:</label>
+                <input type="text" id="tag-input" placeholder="Add tags (press Enter)">
+                <div class="tags" id="tags-container"></div>
+            </div>
+            
+            <div class="annotation-group">
+                <label>Priority:</label>
+                <select id="annotation-priority">
+                    <option value="low">Low</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            
+            <div class="annotation-group">
+                <label>GitHub Status:</label>
+                <div id="github-status"></div>
+            </div>
+            
+            <div class="annotation-group">
+                <button class="btn btn-primary" onclick="saveAnnotation()">Save Notes</button>
+                <button class="btn btn-secondary" onclick="closeAnnotation()">Cancel</button>
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="annotation-group">
+                <h3>Review Project</h3>
+                <button class="btn btn-secondary" onclick="openInVSCode()" style="width: 100%;">
+                    📝 Open in VS Code
+                </button>
+                <p style="font-size: 0.875rem; color: #666; margin-top: 0.5rem;">
+                    Review the project code before deciding to push to GitHub
+                </p>
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="annotation-group">
+                <h3>Actions</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+                    <button id="init-git-btn" class="btn btn-secondary" onclick="initGit()">Initialize Git</button>
+                    <button id="create-github-btn" class="btn btn-success" onclick="createGitHub()">Create GitHub Repo</button>
+                    <button id="push-github-btn" class="btn btn-primary" onclick="pushToGitHub()" style="display: none;">Push to GitHub</button>
+                    <label style="font-size: 0.875rem;">
+                        <input type="checkbox" id="github-private"> Make repository private
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+        let projects = [];
+        let currentProject = null;
+        let filters = {
+            language: '',
+            type: '',
+            status: '',
+            search: ''
+        };
+        
+        async function loadProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                projects = await response.json();
+                
+                updateStats();
+                populateFilters();
+                renderProjects();
+                
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                showError('Failed to load projects: ' + error.message);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        function updateStats() {
+            const stats = {
+                total: projects.length,
+                gitRepos: projects.filter(p => p.has_git).length,
+                githubRepos: projects.filter(p => p.has_remote).length,
+                annotated: projects.filter(p => p.annotation && p.annotation.notes).length
+            };
+            
+            document.getElementById('total-projects').textContent = stats.total;
+            document.getElementById('git-repos').textContent = stats.gitRepos;
+            document.getElementById('github-repos').textContent = stats.githubRepos;
+            document.getElementById('annotated').textContent = stats.annotated;
+        }
+        
+        function populateFilters() {
+            const languages = [...new Set(projects.map(p => p.language))].filter(l => l).sort();
+            const types = [...new Set(projects.map(p => p.type))].filter(t => t).sort();
+            
+            const langSelect = document.getElementById('language-filter');
+            // Clear existing options except the first "All" option
+            while (langSelect.options.length > 1) {
+                langSelect.remove(1);
+            }
+            languages.forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang;
+                option.textContent = lang;
+                langSelect.appendChild(option);
+            });
+            
+            const typeSelect = document.getElementById('type-filter');
+            // Clear existing options except the first "All" option
+            while (typeSelect.options.length > 1) {
+                typeSelect.remove(1);
+            }
+            types.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                typeSelect.appendChild(option);
+            });
+        }
+        
+        function filterProjects() {
+            return projects.filter(project => {
+                if (filters.language && project.language !== filters.language) return false;
+                if (filters.type && project.type !== filters.type) return false;
+                
+                if (filters.status) {
+                    if (filters.status === 'no-git' && project.has_git) return false;
+                    if (filters.status === 'no-remote' && project.has_remote) return false;
+                    if (filters.status === 'no-readme' && project.readme_exists) return false;
+                }
+                
+                if (filters.search) {
+                    const search = filters.search.toLowerCase();
+                    const matchesName = project.name.toLowerCase().includes(search);
+                    const matchesNotes = project.annotation?.notes?.toLowerCase().includes(search);
+                    const matchesTags = project.annotation?.tags?.some(tag => 
+                        tag.toLowerCase().includes(search)
+                    );
+                    
+                    if (!matchesName && !matchesNotes && !matchesTags) return false;
+                }
+                
+                return true;
+            });
+        }
+        
+        function renderProjects() {
+            const grid = document.getElementById('project-grid');
+            const filteredProjects = filterProjects();
+            
+            grid.innerHTML = filteredProjects.map(project => {
+                const isSelected = currentProject && currentProject.name === project.name;
+                const hasNotes = project.annotation?.notes;
+                let githubUrl = null;
+                let isAzure = false;
+                
+                if (project.remote_url) {
+                    // Convert SSH format to HTTPS format
+                    if (project.remote_url.startsWith('git@github.com:')) {
+                        githubUrl = project.remote_url
+                            .replace('git@github.com:', 'https://github.com/')
+                            .replace('.git', '');
+                    } else if (project.remote_url.includes('github.com')) {
+                        githubUrl = project.remote_url.replace('.git', '');
+                    } else if (project.remote_url.includes('dev.azure.com')) {
+                        // Handle Azure DevOps repos
+                        isAzure = true;
+                        // Convert git@ssh.dev.azure.com:v3/org/project/repo to https://dev.azure.com/org/project/_git/repo
+                        if (project.remote_url.startsWith('git@ssh.dev.azure.com:v3/')) {
+                            const parts = project.remote_url.replace('git@ssh.dev.azure.com:v3/', '').split('/');
+                            if (parts.length >= 3) {
+                                githubUrl = `https://dev.azure.com/${parts[0]}/${parts[1]}/_git/${parts[2]}`;
+                            }
+                        } else if (project.remote_url.includes('https://')) {
+                            githubUrl = project.remote_url;
+                        }
+                    }
+                }
+                
+                return `
+                <div class="project-card ${hasNotes ? 'has-notes' : ''} ${isSelected ? 'selected' : ''}" onclick="selectProject('${project.name}')">
+                    ${githubUrl ? `<a href="${githubUrl}" target="_blank" class="github-link ${isAzure ? 'azure' : ''} ${project.is_private ? 'private' : ''}" 
+                        title="${isAzure ? 'Azure DevOps repository' : project.is_private === true ? 'Private repository' : project.is_private === false ? 'Public repository' : 'Repository (visibility unknown)'}"
+                        onclick="event.stopPropagation()">
+                        ${!isAzure && project.is_private !== null ? `
+                            <svg class="visibility-icon" viewBox="0 0 16 16" fill="currentColor">
+                                ${project.is_private ? 
+                                    '<path d="M4 4a4 4 0 1 1 8 0v2h.5c.827 0 1.5.673 1.5 1.5v7c0 .827-.673 1.5-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-7C2 6.673 2.673 6 3.5 6H4V4zm4-1.5A1.5 1.5 0 0 0 6.5 4v2h3V4A1.5 1.5 0 0 0 8 2.5z"/>' :
+                                    '<path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h9A1.5 1.5 0 0 1 14 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-7zM4 6v1.5h1.5V6H4zm0 3v1.5h1.5V9H4zm3-3v1.5h1.5V6H7zm0 3v1.5h1.5V9H7zm3-3v1.5H12V6h-2zm0 3v1.5H12V9h-2z"/>'
+                                }
+                            </svg>
+                        ` : ''}
+                        ${isAzure ? `
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M0 11.5l4.5-11 3.5 8.5h-5l-3 2.5zm4 2.5l2.5-2h7.5l-10 2z"/>
+                            </svg>
+                            Azure
+                        ` : `
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                            </svg>
+                            GitHub
+                        `}
+                    </a>` : ''}
+                    <div class="project-header">
+                        <div class="project-name">${project.name}</div>
+                        <div class="project-type">${project.type}</div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-info-item">
+                            <span class="status-indicator ${project.has_git ? 'yes' : 'no'}"></span>
+                            Git: ${project.has_git ? 'Yes' : 'No'}
+                        </div>
+                        <div class="project-info-item">
+                            <span class="status-indicator ${project.has_remote ? 'yes' : 'no'}"></span>
+                            Remote: ${project.has_remote ? 'Yes' : 'No'}
+                        </div>
+                        <div class="project-info-item">
+                            <span class="status-indicator ${project.readme_exists ? 'yes' : 'no'}"></span>
+                            README: ${project.readme_exists ? 'Yes' : 'No'}
+                        </div>
+                        <div class="project-info-item">
+                            <span class="status-indicator ${project.gitignore_exists ? 'yes' : 'no'}"></span>
+                            .gitignore: ${project.gitignore_exists ? 'Yes' : 'No'}
+                        </div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: #666;">
+                        Language: ${project.language}<br>
+                        Modified: ${project.last_modified}
+                    </div>
+                    ${project.annotation?.notes ? `
+                        <div style="margin-top: 0.5rem; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;">
+                            <small style="color: #495057; display: block;">
+                                <strong>Notes:</strong> ${project.annotation.notes.substring(0, 150)}${project.annotation.notes.length > 150 ? '...' : ''}
+                            </small>
+                        </div>
+                    ` : ''}
+                    ${project.annotation?.tags?.length > 0 ? `
+                        <div class="tags" style="margin-top: 0.5rem;">
+                            ${project.annotation.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            }).join('');
+        }
+        
+        function selectProject(projectName) {
+            currentProject = projects.find(p => p.name === projectName);
+            if (!currentProject) return;
+            
+            // Update the project grid to show selected state
+            renderProjects();
+            
+            document.getElementById('annotation-title').textContent = currentProject.name;
+            document.getElementById('annotation-notes').value = currentProject.annotation?.notes || '';
+            document.getElementById('annotation-priority').value = currentProject.annotation?.priority || 'normal';
+            
+            // Update tags
+            const tagsContainer = document.getElementById('tags-container');
+            tagsContainer.innerHTML = '';
+            (currentProject.annotation?.tags || []).forEach(tag => addTagToDisplay(tag));
+            
+            // Update GitHub status
+            const githubStatus = document.getElementById('github-status');
+            if (currentProject.has_remote) {
+                githubStatus.innerHTML = `<span style="color: green;">✓ Connected to: ${currentProject.remote_url}</span>`;
+            } else {
+                githubStatus.innerHTML = '<span style="color: #666;">No remote repository</span>';
+            }
+            
+            // Update action buttons
+            document.getElementById('init-git-btn').disabled = currentProject.has_git;
+            document.getElementById('create-github-btn').disabled = currentProject.has_remote;
+            
+            // Show push button if we have git but no remote (might indicate empty GitHub repo)
+            const pushBtn = document.getElementById('push-github-btn');
+            if (currentProject.has_git && !currentProject.has_remote) {
+                pushBtn.style.display = 'block';
+            } else {
+                pushBtn.style.display = 'none';
+            }
+            
+            document.getElementById('annotation-panel').classList.add('open');
+        }
+        
+        function closeAnnotation() {
+            document.getElementById('annotation-panel').classList.remove('open');
+            currentProject = null;
+            // Update the project grid to clear selected state
+            renderProjects();
+        }
+        
+        function addTagToDisplay(tag) {
+            const tagsContainer = document.getElementById('tags-container');
+            const tagEl = document.createElement('span');
+            tagEl.className = 'tag';
+            tagEl.innerHTML = `${tag} <span class="tag-remove" onclick="removeTag('${tag}')">&times;</span>`;
+            tagsContainer.appendChild(tagEl);
+        }
+        
+        function removeTag(tag) {
+            if (!currentProject) return;
+            
+            const tags = currentProject.annotation?.tags || [];
+            const index = tags.indexOf(tag);
+            if (index > -1) {
+                tags.splice(index, 1);
+                selectProject(currentProject.name);
+            }
+        }
+        
+        async function saveAnnotation() {
+            if (!currentProject) return;
+            
+            const notes = document.getElementById('annotation-notes').value;
+            const priority = document.getElementById('annotation-priority').value;
+            const tags = currentProject.annotation?.tags || [];
+            const github_created = currentProject.annotation?.github_created || false;
+            
+            // Update the current project object immediately
+            if (!currentProject.annotation) {
+                currentProject.annotation = {};
+            }
+            currentProject.annotation.notes = notes;
+            currentProject.annotation.priority = priority;
+            currentProject.annotation.tags = tags;
+            currentProject.annotation.github_created = github_created;
+            
+            // Update the projects array
+            const projectIndex = projects.findIndex(p => p.name === currentProject.name);
+            if (projectIndex !== -1) {
+                projects[projectIndex] = currentProject;
+            }
+            
+            // Immediately update the UI
+            renderProjects();
+            
+            try {
+                const response = await fetch(`/api/project/${currentProject.name}/annotate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notes, tags, priority, github_created })
+                });
+                
+                if (response.ok) {
+                    showSuccess('Annotation saved successfully');
+                    // Reload in background to sync with server
+                    loadProjects().then(() => {
+                        // Re-select to ensure we have the latest data
+                        const currentName = currentProject.name;
+                        selectProject(currentName);
+                    });
+                } else {
+                    showError('Failed to save annotation');
+                    // Reload to revert changes
+                    await loadProjects();
+                    selectProject(currentProject.name);
+                }
+            } catch (error) {
+                showError('Error saving annotation: ' + error.message);
+                // Reload to revert changes
+                await loadProjects();
+                selectProject(currentProject.name);
+            }
+        }
+        
+        async function initGit() {
+            if (!currentProject || currentProject.has_git) return;
+            
+            try {
+                const response = await fetch(`/api/project/${currentProject.name}/init-git`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess(result.message);
+                    await loadProjects();
+                    selectProject(currentProject.name);
+                } else {
+                    showError(result.message);
+                }
+            } catch (error) {
+                showError('Error initializing git: ' + error.message);
+            }
+        }
+        
+        async function createGitHub() {
+            if (!currentProject || currentProject.has_remote) return;
+            
+            const isPrivate = document.getElementById('github-private').checked;
+            const createBtn = document.getElementById('create-github-btn');
+            const originalText = createBtn.textContent;
+            
+            createBtn.textContent = 'Creating repository...';
+            createBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/project/${currentProject.name}/create-github`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ private: isPrivate })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess(result.message + ' - Repository created and code pushed!');
+                    // Close the panel first
+                    closeAnnotation();
+                    // Reload all projects
+                    await loadProjects();
+                    // Reopen the same project to see updated status
+                    setTimeout(() => selectProject(currentProject.name), 100);
+                } else {
+                    showError(result.message);
+                    createBtn.textContent = originalText;
+                    createBtn.disabled = false;
+                }
+            } catch (error) {
+                showError('Error creating GitHub repo: ' + error.message);
+                createBtn.textContent = originalText;
+                createBtn.disabled = false;
+            }
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => errorEl.style.display = 'none', 5000);
+        }
+        
+        function showSuccess(message) {
+            const successEl = document.getElementById('success');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            setTimeout(() => successEl.style.display = 'none', 3000);
+        }
+        
+        async function openInVSCode() {
+            if (!currentProject) return;
+            
+            try {
+                const response = await fetch(`/api/project/${currentProject.name}/open-vscode`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('Opening project in VS Code...');
+                } else {
+                    showError(result.message);
+                }
+            } catch (error) {
+                showError('Error opening VS Code: ' + error.message);
+            }
+        }
+        
+        async function pushToGitHub() {
+            if (!currentProject) return;
+            
+            const pushBtn = document.getElementById('push-github-btn');
+            const originalText = pushBtn.textContent;
+            
+            pushBtn.textContent = 'Pushing to GitHub...';
+            pushBtn.disabled = true;
+            
+            try {
+                // Use the create-github endpoint which will detect existing repo and push
+                const response = await fetch(`/api/project/${currentProject.name}/create-github`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ private: false })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('Code pushed to GitHub successfully!');
+                    // Reload projects and reselect
+                    closeAnnotation();
+                    await loadProjects();
+                    setTimeout(() => selectProject(currentProject.name), 100);
+                } else {
+                    showError(result.message);
+                    pushBtn.textContent = originalText;
+                    pushBtn.disabled = false;
+                }
+            } catch (error) {
+                showError('Error pushing to GitHub: ' + error.message);
+                pushBtn.textContent = originalText;
+                pushBtn.disabled = false;
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('language-filter').addEventListener('change', (e) => {
+            filters.language = e.target.value;
+            renderProjects();
+        });
+        
+        document.getElementById('type-filter').addEventListener('change', (e) => {
+            filters.type = e.target.value;
+            renderProjects();
+        });
+        
+        document.getElementById('status-filter').addEventListener('change', (e) => {
+            filters.status = e.target.value;
+            renderProjects();
+        });
+        
+        document.getElementById('search').addEventListener('input', (e) => {
+            filters.search = e.target.value;
+            renderProjects();
+        });
+        
+        document.getElementById('tag-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && currentProject) {
+                const tag = e.target.value.trim();
+                if (tag) {
+                    if (!currentProject.annotation) {
+                        currentProject.annotation = { tags: [] };
+                    }
+                    if (!currentProject.annotation.tags) {
+                        currentProject.annotation.tags = [];
+                    }
+                    if (!currentProject.annotation.tags.includes(tag)) {
+                        currentProject.annotation.tags.push(tag);
+                        addTagToDisplay(tag);
+                    }
+                    e.target.value = '';
+                }
+            }
+        });
+        
+        // Load projects on page load
+        loadProjects();
+    </script>
+</body>
+</html>

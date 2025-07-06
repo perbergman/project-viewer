@@ -1,0 +1,287 @@
+{
+  "SchwinnBTCapture": {
+    "notes": "Bike capture tool",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "2way": {
+    "notes": "Clickatell cert test",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "GPT-Agents-main": {
+    "notes": "This is code samples from a book",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "addr": {
+    "notes": "AI address matcher",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "ags": {
+    "notes": "Agentic framework based on Pi Calculus",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "allocator": {
+    "notes": "ERC20 Token allocator ",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "ava": {
+    "notes": "Avalanche Teleporter\n",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "PluginsAPIDemo": {
+    "notes": "Besu plugin demo",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "besu": {
+    "notes": "Besu code base linkase",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "besu-cross-network-plugin": {
+    "notes": "Experimental ",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "besu-test": {
+    "notes": "Experimental multi-network\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "besujvm": {
+    "notes": "Besu docker\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "blockscout": {
+    "notes": "Blockscout code base",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "bosse": {
+    "notes": "JavaScript arrow feature\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "canton-local": {
+    "notes": "Canton/Scala base setup\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "canton2": {
+    "notes": "Temp canton test\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "agentic-ai-chat": {
+    "notes": "Large multi-agent code base",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "circom": {
+    "notes": "Temp Circom test",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "circpl": {
+    "notes": "Prolog/SNARK demo",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "codedoc": {
+    "notes": "Repo doc tool",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "config": {
+    "notes": "Canton temp\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "converter": {
+    "notes": "BigInt extension",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "converter_support": {
+    "notes": "BigInt extension\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "daml": {
+    "notes": "DAML samples\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "dapp": {
+    "notes": "Temp dApp",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "dars": {
+    "notes": "Temp DARs\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "demo": {
+    "notes": "DAML demo\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "dumpproxies": {
+    "notes": "Besu proxy scanner",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "dynreact": {
+    "notes": "Dynamic React loader (in Azure Repo)\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "eth_explorer": {
+    "notes": "Elixir EVM Explorer",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "examples": {
+    "notes": "DAML/Canton examples",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "funds": {
+    "notes": "neo4j/go/evm sample\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "juppe": {
+    "notes": "Python EC plot",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "justpg": {
+    "notes": "PG book samples\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "kurtosis-cdk": {
+    "notes": "CDK link",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "l1l2": {
+    "notes": "L1/L2 setup files",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "lib": {
+    "notes": "Canton jars\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "llm-queue": {
+    "notes": "Go producer and consumer\n",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "mermaid": {
+    "notes": "Mermaid --> Lucidchart mapper",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "music": {
+    "notes": "Guitar note analyzer and modifier",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "njin": {
+    "notes": "nginx and golang\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "njin2": {
+    "notes": "nginx and SSL",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "opcode": {
+    "notes": "Besu op code",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "optimism-erc20-test": {
+    "notes": "Optimism and ERC20 test\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "otprepos": {
+    "notes": "Contains projects in turn\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "pdf_decide": {
+    "notes": "PDF Mistral OCR\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "pgpool": {
+    "notes": "Azure Functions sharing state\n",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "ppt": {
+    "github_created": true
+  }
+}

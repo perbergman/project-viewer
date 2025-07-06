@@ -1,0 +1,10 @@
+{
+  "description": "A Bluetooth capture tool for Schwinn exercise bikes",
+  "status": "inactive",
+  "category": "IoT/Hardware",
+  "technologies": ["Swift", "Bluetooth", "iOS"],
+  "created": "2023-01-15",
+  "lastActive": "2023-06-20",
+  "purpose": "Personal project to capture and analyze workout data from Schwinn IC4 bike",
+  "notes": "Works with IC4 model. Needs update for newer firmware versions."
+}
