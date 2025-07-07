@@ -282,7 +282,10 @@
     "priority": "normal"
   },
   "ppt": {
-    "github_created": true
+    "notes": "MD + mermaid --> PPT/PDF",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
   },
   "project-viewer": {
     "notes": "Project viewer",
@@ -382,6 +385,48 @@
   },
   "zkp-test": {
     "notes": "Large ZKP demo",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "bldt-contracts": {
+    "notes": "ERC20 samples",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "bldt-db": {
+    "notes": "DB code",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "camundaclasses": {
+    "notes": "Camunda samples",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "erc20-besu-project": {
+    "notes": "ERC20 project",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "podman-besu": {
+    "notes": "Deploy code\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "local-rag": {
+    "notes": "RAG project",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "polygon-cli": {
+    "notes": "Polygon cli clone",
     "tags": [],
     "github_created": false,
     "priority": "normal"

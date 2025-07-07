@@ -601,7 +601,7 @@
                 total: projects.length,
                 gitRepos: projects.filter(p => p.has_git).length,
                 githubRepos: projects.filter(p => p.has_remote).length,
-                annotated: projects.filter(p => p.annotation && p.annotation.notes).length
+                annotated: projects.filter(p => p.annotation && (p.annotation.notes && p.annotation.notes.trim() !== '')).length
             };
             
             document.getElementById('total-projects').textContent = stats.total;
