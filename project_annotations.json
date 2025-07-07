@@ -283,5 +283,107 @@
   },
   "ppt": {
     "github_created": true
+  },
+  "project-viewer": {
+    "notes": "Project viewer",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "protobuf": {
+    "notes": "DAML protobuf",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "psych": {
+    "notes": "iPhone Breath app",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "pypoll": {
+    "notes": "Evm poller\n",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "quorum-test-network": {
+    "notes": "Standard test evm",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "repo_agent": {
+    "notes": "Erlang  agents\n",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "request-reply": {
+    "notes": "Azure Function bus code",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "risc0": {
+    "notes": "Risc0 sample",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "sampo": {
+    "notes": "truffle to foundry migration",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "sender": {
+    "notes": "Azure Function test driver",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "sql_gpt": {
+    "notes": "Convert natural language to PostgreSQL queries",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "stark101": {
+    "notes": "STARK demo",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "supasim": {
+    "notes": "Optimism sample",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "theLMbook": {
+    "notes": "Book code",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "zk-demo": {
+    "notes": "ZKp Voting demo",
+    "tags": [],
+    "github_created": true,
+    "priority": "normal"
+  },
+  "zkp-test-book": {
+    "notes": "ZKP theory notebooks",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
+  },
+  "zkp-test": {
+    "notes": "Large ZKP demo",
+    "tags": [],
+    "github_created": false,
+    "priority": "normal"
   }
 }
