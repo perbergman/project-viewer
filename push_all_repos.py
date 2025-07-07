@@ -17,8 +17,8 @@ def check_and_push_repo(repo_path, repo_name):
         if status.stdout.strip():
             print(f"\n📝 {repo_name}: Has uncommitted changes")
             
-            # Add all changes
-            subprocess.run(['git', 'add', '.'], cwd=repo_path, check=True)
+            # Add all changes (ignore submodule warnings)
+            subprocess.run(['git', 'add', '.'], cwd=repo_path, capture_output=True)
             
             # Commit
             commit_result = subprocess.run(['git', 'commit', '-m', 'Update project files'], 
